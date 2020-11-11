@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-redis
+spec:
+  selector:
+    app: deployment-redis
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 46379
+    targetPort: 6379

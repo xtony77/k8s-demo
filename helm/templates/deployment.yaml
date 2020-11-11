@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-nginx-helm
+  namespace: {{ .Values.namespace }}
+  annotations:
+    version: "{{ .Values.releaseVersion }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-nginx-helm
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  revisionHistoryLimit: 5
+  template:
+    metadata:
+      labels:
+        app: deployment-nginx-helm
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          ports:
+            - containerPort: 80
+          # resources:
+          #   requests:
+          #     cpu: 100m
+          volumeMounts:
+            - mountPath: /var/log/nginx
+              name: log
+      volumes:
+        - name: log
+          hostPath:
+            type: DirectoryOrCreate
+            path: /Users/xtony77/k8s/nginx

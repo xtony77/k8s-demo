@@ -1,0 +1,4 @@
+# helm upgrade helm-demo . --set-string releaseVersion=20201114
+releaseVersion: "20201113"
+
+namespace: namespace-nginx

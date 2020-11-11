@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+  namespace: {{ .Values.namespace }}
+spec:
+  tls:
+    - hosts:
+        - nginx.localhost.test
+      secretName: secret-nginx
+  rules:
+    - host: nginx.localhost.test
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: service-nginx-helm
+              port:
+                number: 8080

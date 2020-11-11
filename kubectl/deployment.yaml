@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis
-  labels:
-    name: redis
+  name: deployment-redis
+  annotations:
+    version: "20201112"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: helloredis
+      app: deployment-redis
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -18,25 +18,29 @@ spec:
   template:
     metadata:
       labels:
-        app: helloredis
+        app: deployment-redis
     spec:
       containers:
         - image: redis
           name: redis
-          command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+          command:
+            - redis-server
+            - "/usr/local/etc/redis/redis.conf"
           ports:
             - containerPort: 6379
           volumeMounts:
             - mountPath: /data
-              name: redisdata
-            - mountPath: /usr/local/etc/redis/redis.conf
+              name: data
+            - mountPath: /usr/local/etc/redis
               name: config
-              subPath: redis.conf
       volumes:
-        - name: redisdata
+        - name: data
           hostPath:
             type: DirectoryOrCreate
             path: /Users/xtony77/k8s/redis
         - name: config
           configMap:
             name: configmap-redis
+            items:
+            - key: redis.conf
+              path: redis.conf
