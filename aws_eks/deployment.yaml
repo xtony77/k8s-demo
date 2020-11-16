@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-redis
+  annotations:
+    version: "20201112"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-redis
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  revisionHistoryLimit: 5
+  template:
+    metadata:
+      labels:
+        app: deployment-redis
+    spec:
+      containers:
+        - image: redis
+          name: redis
+          command:
+            - redis-server
+            - "/usr/local/etc/redis/redis.conf"
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /usr/local/etc/redis
+              name: config
+      volumes:
+        - name: data
+          awsElasticBlockStore:
+            volumeID: "vol-0100xxxxxxxxxxx"
+        - name: config
+          configMap:
+            name: configmap-redis
+            items:
+            - key: redis.conf
+              path: redis.conf

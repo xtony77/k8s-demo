@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-redis
+  labels:
+    app: configmap-redis
+data:
+  redis.conf: |-
+    requirepass "123456"
+    appendonly "yes"
