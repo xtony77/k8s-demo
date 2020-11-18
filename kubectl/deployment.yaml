@@ -37,7 +37,7 @@ spec:
         - name: data
           hostPath:
             type: DirectoryOrCreate
-            path: /Users/xtony77/k8s/redis
+            path: /var/redis
         - name: config
           configMap:
             name: configmap-redis
